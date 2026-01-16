@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Produk | CRUD App</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-store"></i>
+                    <h1>Katalog<span>Produk</span></h1>
+                </div>
+                <div class="header-info">
+                    <div class="stats">
+                        <div class="stat-item">
+                            <i class="fas fa-box-open"></i>
+                            <span id="totalProducts">0</span> Produk
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span id="inStockProducts">0</span> Tersedia
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar Form -->
+            <aside class="sidebar">
+                <div class="sidebar-card">
+                    <h2 class="form-title">
+                        <i class="fas fa-edit"></i>
+                        <span id="formActionText">Tambah Produk Baru</span>
+                    </h2>
+                    
+                    <form id="productForm" class="product-form">
+                        <input type="hidden" id="productId">
+                        
+                        <div class="form-group">
+                            <label for="productName">
+                                <i class="fas fa-tag"></i> Nama Produk
+                            </label>
+                            <input type="text" id="productName" class="form-control" placeholder="Masukkan nama produk" required>
+                            <div class="form-hint">Contoh: Laptop Gaming</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="productCategory">
+                                <i class="fas fa-list"></i> Kategori
+                            </label>
+                            <div class="category-select">
+                                <select id="productCategory" class="form-control" required>
+                                    <option value="">Pilih Kategori</option>
+                                    <option value="Elektronik">Elektronik</option>
+                                    <option value="Pakaian">Pakaian & Fashion</option>
+                                    <option value="Makanan">Makanan & Minuman</option>
+                                    <option value="Buku">Buku & Alat Tulis</option>
+                                    <option value="Rumah">Perabotan Rumah</option>
+                                    <option value="Olahraga">Olahraga & Outdoor</option>
+                                    <option value="Kecantikan">Kecantikan</option>
+                                    <option value="Lainnya">Lainnya</option>
+                                </select>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="productPrice">
+                                <i class="fas fa-money-bill-wave"></i> Harga (Rp)
+                            </label>
+                            <input type="number" id="productPrice" class="form-control" placeholder="0" min="0" required>
+                            <div class="form-hint">Masukkan harga tanpa titik</div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group half">
+                                <label for="productStock">
+                                    <i class="fas fa-boxes"></i> Stok
+                                </label>
+                                <input type="number" id="productStock" class="form-control" placeholder="0" min="0" required>
+                            </div>
+                            
+                            <div class="form-group half">
+                                <label for="productRating">
+                                    <i class="fas fa-star"></i> Rating
+                                </label>
+                                <div class="rating-input">
+                                    <select id="productRating" class="form-control">
+                                        <option value="5">★★★★★ (5)</option>
+                                        <option value="4">★★★★☆ (4)</option>
+                                        <option value="3">★★★☆☆ (3)</option>
+                                        <option value="2">★★☆☆☆ (2)</option>
+                                        <option value="1">★☆☆☆☆ (1)</option>
+                                    </select>
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="productDescription">
+                                <i class="fas fa-align-left"></i> Deskripsi
+                            </label>
+                            <textarea id="productDescription" class="form-control" rows="3" placeholder="Deskripsi produk" required></textarea>
+                            <div class="form-hint">Maksimal 200 karakter</div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" id="submitBtn" class="btn btn-primary">
+                                <i class="fas fa-plus"></i>
+                                <span>Tambah Produk</span>
+                            </button>
+                            <button type="button" id="cancelBtn" class="btn btn-secondary">
+                                <i class="fas fa-times"></i>
+                                <span>Batal Edit</span>
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="app-info">
+                        <h3><i class="fas fa-info-circle"></i> Informasi Aplikasi</h3>
+                        <p>Data produk disimpan di localStorage browser Anda. Fitur CRUD lengkap tersedia untuk mengelola katalog produk.</p>
+                        <button id="clearDataBtn" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i> Hapus Semua Data
+                        </button>
+                        <button id="loadSampleBtn" class="btn btn-outline">
+                            <i class="fas fa-download"></i> Muat Data Contoh
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <section class="content-area">
+                <div class="content-header">
+                    <h2><i class="fas fa-boxes"></i> Daftar Produk</h2>
+                    <div class="controls">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" placeholder="Cari produk...">
+                        </div>
+                        <div class="filter-controls">
+                            <select id="categoryFilter" class="filter-select">
+                                <option value="">Semua Kategori</option>
+                                <option value="Elektronik">Elektronik</option>
+                                <option value="Pakaian">Pakaian</option>
+                                <option value="Makanan">Makanan</option>
+                                <option value="Buku">Buku</option>
+                                <option value="Rumah">Rumah</option>
+                                <option value="Olahraga">Olahraga</option>
+                                <option value="Kecantikan">Kecantikan</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                            <select id="sortSelect" class="filter-select">
+                                <option value="newest">Terbaru</option>
+                                <option value="oldest">Terlama</option>
+                                <option value="price-high">Harga Tertinggi</option>
+                                <option value="price-low">Harga Terendah</option>
+                                <option value="name">Nama A-Z</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="products-grid" id="productsGrid">
+                    <!-- Produk akan dimuat di sini -->
+                </div>
+                
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-icon">
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                    <h3>Belum ada produk</h3>
+                    <p>Tambahkan produk pertama Anda menggunakan form di samping</p>
+                    <button id="addFirstProductBtn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Tambah Produk Pertama
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>Aplikasi Katalog Produk Mini © 2023 • Dibuat dengan <i class="fas fa-heart"></i> untuk demonstrasi CRUD</p>
+            <div class="footer-links">
+                <span><i class="fas fa-database"></i> Total Data: <span id="storageCount">0</span> produk</span>
+                <span><i class="fas fa-code"></i> HTML, CSS, JavaScript</span>
+            </div>
+        </footer>
+
+        <!-- Notification Toast -->
+        <div id="notification" class="notification-toast">
+            <div class="toast-content">
+                <i class="fas fa-check-circle"></i>
+                <div class="toast-message">Produk berhasil ditambahkan</div>
+            </div>
+            <button class="toast-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Confirmation Modal -->
+        <div id="confirmationModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Konfirmasi</h3>
+                    <button class="modal-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalMessage">Apakah Anda yakin ingin menghapus produk ini?</p>
+                </div>
+                <div class="modal-actions">
+                    <button id="modalCancel" class="btn btn-secondary">Batal</button>
+                    <button id="modalConfirm" class="btn btn-danger">Hapus</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
